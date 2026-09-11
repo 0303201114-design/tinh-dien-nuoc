@@ -1,0 +1,9 @@
+{
+  "name": "Bảng tính điện nước",
+  "short_name": "Tính điện nước",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f4f6",
+  "theme_color": "#1f2937",
+  "lang": "vi"
+}
