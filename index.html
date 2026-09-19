@@ -1,205 +1,747 @@
 <!doctype html>
+
 <html lang="vi">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#1f2937">
+  <meta name="theme-color" content="#0b3c75">
+
   <link rel="manifest" href="manifest.webmanifest">
+
   <title>Bảng tính điện nước</title>
+
   <style>
     *{box-sizing:border-box}
+
     body{
-      margin:0;background:#f3f4f6;color:#111827;
+      margin:0;
+      background:#f3f4f6;
+      color:#111827;
       font-family:Arial,Helvetica,sans-serif;
       -webkit-tap-highlight-color:transparent;
     }
-    .app{max-width:1100px;margin:auto;padding:14px}
+
+    .header{
+      background-color:#0b3c75;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 20px;
+      color:white;
+    }
+
+    .header-left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .logo{
+      height:38px;
+      background:white;
+      padding:2px;
+      border-radius:4px;
+      object-fit:contain;
+    }
+
+    .company-name{
+      margin:0;
+      font-size:24px;
+      color:white;
+    }
+
+    .header-clear{
+      background-color:#1976d2;
+      color:white;
+      border:1px solid rgba(255,255,255,0.4);
+      padding:6px 16px;
+      border-radius:6px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    .app{
+      max-width:1100px;
+      margin:auto;
+      padding:14px;
+    }
+
     .top{
-      display:flex;align-items:center;justify-content:space-between;
-      gap:12px;margin-bottom:12px
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
     }
-    h1{font-size:22px;margin:0}
-    .actions{display:flex;gap:8px}
+
+    h1{
+      font-size:22px;
+      margin:0;
+    }
+
+    .actions{
+      display:flex;
+      gap:8px;
+    }
+
     button{
-      border:0;border-radius:10px;padding:10px 13px;
-      font-weight:700;background:#1f2937;color:#fff;cursor:pointer
+      border:0;
+      border-radius:10px;
+      padding:10px 13px;
+      font-weight:700;
+      background:#1f2937;
+      color:#fff;
+      cursor:pointer;
     }
-    button.secondary{background:#e5e7eb;color:#111827}
+
+    button.secondary{
+      background:#e5e7eb;
+      color:#111827;
+    }
+
     .hint{
-      background:#fff;border:1px solid #d1d5db;border-radius:12px;
-      padding:11px 13px;margin-bottom:12px;font-size:14px;line-height:1.45
+      background:#fff;
+      border:1px solid #d1d5db;
+      border-radius:12px;
+      padding:11px 13px;
+      margin-bottom:12px;
+      font-size:14px;
+      line-height:1.45;
     }
+
     .table-wrap{
-      background:#fff;border:1px solid #9ca3af;border-radius:12px;
-      overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,.06)
+      background:#fff;
+      border:1px solid #9ca3af;
+      border-radius:12px;
+      overflow-x:auto;
+      box-shadow:0 2px 8px rgba(0,0,0,.06);
     }
-    table{border-collapse:collapse;width:100%;min-width:720px;table-layout:fixed}
+
+    table{
+      border-collapse:collapse;
+      width:100%;
+      min-width:720px;
+      table-layout:fixed;
+    }
+
     th,td{
-      border:1px solid #9ca3af;padding:10px;text-align:center;
-      vertical-align:middle;height:58px
+      border:1px solid #9ca3af;
+      padding:10px;
+      text-align:center;
+      vertical-align:middle;
+      height:58px;
     }
-    th{background:#f9fafb;font-size:14px}
-    td:first-child{text-align:left;font-weight:700;width:30%}
+
+    th{
+      background:#f9fafb;
+      font-size:14px;
+    }
+
+    td:first-child{
+      text-align:left;
+      font-weight:700;
+      width:30%;
+    }
+
     .input{
-      width:100%;min-height:42px;padding:9px 8px;
-      border:2px solid #9ca3af;border-radius:8px;
-      font-size:18px;text-align:center;background:#fff;
-      outline:none
+      width:100%;
+      min-height:42px;
+      padding:9px 8px;
+      border:2px solid #9ca3af;
+      border-radius:8px;
+      font-size:18px;
+      text-align:center;
+      background:#fff;
+      outline:none;
     }
-    .input:focus{border-color:#111827;box-shadow:0 0 0 2px rgba(17,24,39,.12)}
+
+    .input:focus{
+      border-color:#111827;
+      box-shadow:0 0 0 2px rgba(17,24,39,.12);
+    }
+
     .readonly{
-      background:#ffeb3b;font-weight:700
+      background:#ffeb3b;
+      font-weight:700;
     }
-    .result{font-weight:700;font-size:17px}
-    .formula{font-size:13px;color:#4b5563}
+
+    .result{
+      font-weight:700;
+      font-size:17px;
+    }
+
     .status{
-      margin-top:12px;padding:11px 13px;background:#fff;
-      border:1px solid #d1d5db;border-radius:10px;font-size:14px
+      margin-top:12px;
+      padding:11px 13px;
+      background:#fff;
+      border:1px solid #d1d5db;
+      border-radius:10px;
+      font-size:14px;
     }
+
     @media(max-width:650px){
-      .app{padding:10px}
-      h1{font-size:19px}
-      .top{align-items:flex-start}
-      .actions button{padding:9px 10px}
-      .hint{font-size:13px}
-      th,td{padding:7px;height:54px}
-      .input{font-size:17px}
+
+      .header{
+        padding:10px 12px;
+      }
+
+      .header-left{
+        gap:8px;
+      }
+
+      .logo{
+        height:32px;
+      }
+
+      .company-name{
+        font-size:17px;
+      }
+
+      .header-clear{
+        padding:6px 11px;
+        font-size:13px;
+      }
+
+      .app{
+        padding:10px;
+      }
+
+      h1{
+        font-size:19px;
+      }
+
+      .hint{
+        font-size:13px;
+      }
+
+      th,td{
+        padding:7px;
+        height:54px;
+      }
+
+      .input{
+        font-size:17px;
+      }
     }
   </style>
+
 </head>
-<body <!-- HEADER THANH XANH -->
-<header style="background-color: #0b3c75; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; color: white;">
-  <div style="display: flex; align-items: center; gap: 12px;">
-    <img src="logo công ty.png" alt="Nafoods Logo" style="height: 38px; background: white; padding: 2px; border-radius: 4px; object-fit: contain;" />
-    <h1 style="margin: 0; font-size: 24px; color: white;">Danh_Điện cơ khí</h1>
+
+<body>
+
+<header class="header">
+
+  <div class="header-left">
+
+```
+<img
+  src="logo công ty.png"
+  alt="Logo công ty"
+  class="logo"
+>
+
+<h1 class="company-name">
+  Danh_Điện cơ khí
+</h1>
+```
+
   </div>
-  <button onclick="location.reload()" style="background-color: #1976d2; color: white; border: 1px solid rgba(255,255,255,0.4); padding: 6px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">Xóa</button>
-</header>>
+
+<button
+class="header-clear"
+onclick="clearData()"
+
+>
+
+```
+Xóa
+```
+
+  </button>
+
+</header>
+
 <div class="app">
+
   <div class="top">
     <h1>BẢNG TÍNH</h1>
-    <div class="actions">
-      <button class="secondary" id="clearBtn">Xóa</button>
-    </div>
+
+```
+<div class="actions">
+  <button class="secondary" id="clearBtn">
+    Xóa
+  </button>
+</div>
+```
+
   </div>
 
   <div class="hint">
-    Nhập số ở các ô <b>CT tổng</b>, <b>CT kho lạnh</b> và <b>CT Văn Phòng</b>.
-    Các ô <b>KHÔNG NHẬP</b> và kết quả sẽ tự tính theo đúng công thức trong file Excel.
+    Nhập số vào các ô màu trắng.
+    Kết quả sẽ tự động tính theo đúng công thức trong file Excel.
   </div>
 
   <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>BẢNG TÍNH</th>
-          <th>CT tổng</th>
-          <th>CT kho lạnh</th>
-          <th>CT Văn Phòng</th>
-          <th>Công tơ sản xuất</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Nhập chỉ số đầu trên sổ</td>
-          <td><input class="input" id="B2" inputmode="decimal" type="number" step="any"></td>
-          <td><input class="input" id="C2" inputmode="decimal" type="number" step="any"></td>
-          <td><input class="input" id="D2" inputmode="decimal" type="number" step="any"></td>
-          <td class="readonly">KHÔNG NHẬP</td>
-        </tr>
-        <tr>
-          <td>Nhập chỉ số trên công tơ ngày sau</td>
-          <td><input class="input" id="B3" inputmode="decimal" type="number" step="any"></td>
-          <td><input class="input" id="C3" inputmode="decimal" type="number" step="any"></td>
-          <td><input class="input" id="D3" inputmode="decimal" type="number" step="any"></td>
-          <td class="readonly">KHÔNG NHẬP</td>
-        </tr>
-        <tr>
-          <td>kết quả chỉ số đã tính trên công tơ ngày sau</td>
-          <td class="readonly">KHÔNG NHẬP</td>
-          <td class="result" id="C4">—</td>
-          <td class="result" id="D4">—</td>
-          <td class="readonly">KHÔNG NHẬP</td>
-        </tr>
-        <tr>
-          <td>kết quả tiêu thụ 1 ngày</td>
-          <td class="result" id="B5">—</td>
-          <td class="result" id="C5">—</td>
-          <td class="result" id="D5">—</td>
-          <td class="result" id="E5">—</td>
-        </tr>
-      </tbody>
-    </table>
+
+```
+<table>
+
+  <thead>
+    <tr>
+      <th>BẢNG TÍNH</th>
+      <th>CT tổng</th>
+      <th>CT kho lạnh</th>
+      <th>CT Văn Phòng</th>
+      <th>Công tơ sản xuất</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <!-- DÒNG 2 -->
+    <tr>
+
+      <td>
+        Nhập chỉ số đầu công tơ
+      </td>
+
+      <td>
+        <input class="input" id="B2"
+          inputmode="decimal"
+          type="number"
+          step="any">
+      </td>
+
+      <td>
+        <input class="input" id="C2"
+          inputmode="decimal"
+          type="number"
+          step="any">
+      </td>
+
+      <td>
+        <input class="input" id="D2"
+          inputmode="decimal"
+          type="number"
+          step="any">
+      </td>
+
+      <td class="readonly">
+        KHÔNG NHẬP
+      </td>
+
+    </tr>
+
+
+    <!-- DÒNG 3 -->
+    <tr>
+
+      <td>
+        Nhập chỉ số cuối trên công tơ
+      </td>
+
+      <td>
+        <input class="input" id="B3"
+          inputmode="decimal"
+          type="number"
+          step="any">
+      </td>
+
+      <td>
+        <input class="input" id="C3"
+          inputmode="decimal"
+          type="number"
+          step="any">
+      </td>
+
+      <td>
+        <input class="input" id="D3"
+          inputmode="decimal"
+          type="number"
+          step="any">
+      </td>
+
+      <td class="readonly">
+        KHÔNG NHẬP
+      </td>
+
+    </tr>
+
+
+    <!-- DÒNG 4 -->
+    <tr>
+
+      <td>
+        Nhập chỉ số đầu trên sổ
+      </td>
+
+      <td>
+        <input class="input" id="B4"
+          inputmode="decimal"
+          type="number"
+          step="any">
+      </td>
+
+      <td>
+        <input class="input" id="C4"
+          inputmode="decimal"
+          type="number"
+          step="any">
+      </td>
+
+      <td>
+        <input class="input" id="D4"
+          inputmode="decimal"
+          type="number"
+          step="any">
+      </td>
+
+      <td class="readonly">
+        KHÔNG NHẬP
+      </td>
+
+    </tr>
+
+
+    <!-- DÒNG 5 -->
+    <tr>
+
+      <td>
+        Kết quả tiêu thụ 1 ngày
+      </td>
+
+      <td class="result" id="B5">—</td>
+
+      <td class="result" id="C5">—</td>
+
+      <td class="result" id="D5">—</td>
+
+      <td class="result" id="E5">—</td>
+
+    </tr>
+
+
+    <!-- DÒNG 6 -->
+    <tr>
+
+      <td>
+        Số để ghi chỉ số cuối trên sổ
+      </td>
+
+      <td class="result" id="B6">—</td>
+
+      <td class="result" id="C6">—</td>
+
+      <td class="result" id="D6">—</td>
+
+      <td class="result" id="E6">—</td>
+
+    </tr>
+
+  </tbody>
+
+</table>
+```
+
   </div>
 
-  <div class="status" id="status">Chưa nhập dữ liệu.</div>
+  <div class="status" id="status">
+    Chưa nhập dữ liệu.
+  </div>
+
 </div>
 
 <script>
-  const ids = ["B2","C2","D2","B3","C3","D3"];
-  const $ = id => document.getElementById(id);
-  const num = id => {
-    const v = $(id).value.trim();
-    return v === "" ? null : Number(v);
-  };
-  const fmt = v => {
-    if (v === null || !Number.isFinite(v)) return "—";
-    return Number.isInteger(v) ? String(v) : String(Number(v.toFixed(6)));
-  };
 
-  function calculate(){
-    const B2=num("B2"), C2=num("C2"), D2=num("D2");
-    const B3=num("B3"), C3=num("C3"), D3=num("D3");
+  /*
+   * CÁC Ô NHẬP THEO FILE EXCEL
+   */
+  const ids = [
+    "B2",
+    "C2",
+    "D2",
+    "B3",
+    "C3",
+    "D3",
+    "B4",
+    "C4",
+    "D4"
+  ];
 
-    // Công thức giữ nguyên theo file Excel:
-    // C4=((C3-(C2/100))*100)
-    // D4=((D3-(D2/100))*100)
-    // B5=B3-B2
-    // C5=C4-C2
-    // D5=D4-D2
-    // E5=B5-(C5+D5)
 
-    const C4 = C2 !== null && C3 !== null ? ((C3-(C2/100))*100) : null;
-    const D4 = D2 !== null && D3 !== null ? ((D3-(D2/100))*100) : null;
-    const B5 = B2 !== null && B3 !== null ? B3-B2 : null;
-    const C5 = C4 !== null && C2 !== null ? C4-C2 : null;
-    const D5 = D4 !== null && D2 !== null ? D4-D2 : null;
-    const E5 = B5 !== null && C5 !== null && D5 !== null ? B5-(C5+D5) : null;
+  const $ = id =>
+    document.getElementById(id);
 
-    $("C4").textContent=fmt(C4);
-    $("D4").textContent=fmt(D4);
-    $("B5").textContent=fmt(B5);
-    $("C5").textContent=fmt(C5);
-    $("D5").textContent=fmt(D5);
-    $("E5").textContent=fmt(E5);
 
-    const complete = ids.every(id => $(id).value.trim() !== "");
-    $("status").textContent = complete
-      ? "Đã tính xong. Kết quả tự cập nhật khi bạn thay đổi số."
-      : "Chưa nhập đủ 6 chỉ số đầu vào.";
+  function num(id){
 
-    localStorage.setItem("dienNuocData", JSON.stringify(
-      Object.fromEntries(ids.map(id => [id,$(id).value]))
-    ));
+    const value = $(id).value.trim();
+
+    if(value === ""){
+      return null;
+    }
+
+    const number = Number(value);
+
+    return Number.isFinite(number)
+      ? number
+      : null;
   }
 
-  ids.forEach(id => $(id).addEventListener("input", calculate));
 
-  $("clearBtn").addEventListener("click", () => {
-    ids.forEach(id => $(id).value="");
+  function fmt(value){
+
+    if(
+      value === null ||
+      !Number.isFinite(value)
+    ){
+      return "—";
+    }
+
+    return Number.isInteger(value)
+      ? String(value)
+      : String(Number(value.toFixed(6)));
+  }
+
+
+  /*
+   * ==============================
+   * CÔNG THỨC LẤY ĐÚNG TỪ EXCEL
+   * ==============================
+   */
+  function calculate(){
+
+    const B2 = num("B2");
+    const C2 = num("C2");
+    const D2 = num("D2");
+
+    const B3 = num("B3");
+    const C3 = num("C3");
+    const D3 = num("D3");
+
+    const B4 = num("B4");
+    const C4 = num("C4");
+    const D4 = num("D4");
+
+
+    /*
+     * EXCEL:
+     *
+     * B5 = B3-B2
+     * C5 = (C3-C2)*100
+     * D5 = (D3-D2)*40
+     * E5 = B5-(C5+D5)
+     */
+
+    const B5 =
+      B2 !== null && B3 !== null
+        ? B3 - B2
+        : null;
+
+
+    const C5 =
+      C2 !== null && C3 !== null
+        ? (C3 - C2) * 100
+        : null;
+
+
+    const D5 =
+      D2 !== null && D3 !== null
+        ? (D3 - D2) * 40
+        : null;
+
+
+    const E5 =
+      B5 !== null &&
+      C5 !== null &&
+      D5 !== null
+        ? B5 - (C5 + D5)
+        : null;
+
+
+    /*
+     * EXCEL:
+     *
+     * B6 = B4+B5
+     * C6 = C4+C5
+     * D6 = D4+D5
+     * E6 = E4+E5
+     *
+     * E4 trong Excel đang để trống,
+     * nên xem như 0.
+     */
+
+    const B6 =
+      B4 !== null && B5 !== null
+        ? B4 + B5
+        : null;
+
+
+    const C6 =
+      C4 !== null && C5 !== null
+        ? C4 + C5
+        : null;
+
+
+    const D6 =
+      D4 !== null && D5 !== null
+        ? D4 + D5
+        : null;
+
+
+    const E6 =
+      E5 !== null
+        ? E5
+        : null;
+
+
+    /*
+     * HIỂN THỊ KẾT QUẢ
+     */
+
+    $("B5").textContent = fmt(B5);
+    $("C5").textContent = fmt(C5);
+    $("D5").textContent = fmt(D5);
+    $("E5").textContent = fmt(E5);
+
+    $("B6").textContent = fmt(B6);
+    $("C6").textContent = fmt(C6);
+    $("D6").textContent = fmt(D6);
+    $("E6").textContent = fmt(E6);
+
+
+    /*
+     * TRẠNG THÁI
+     */
+
+    const complete =
+      ids.every(
+        id => $(id).value.trim() !== ""
+      );
+
+
+    $("status").textContent =
+      complete
+        ? "Đã tính xong. Kết quả tự cập nhật khi bạn thay đổi số."
+        : "Chưa nhập đủ số liệu đầu vào.";
+
+
+    /*
+     * LƯU DỮ LIỆU
+     */
+
+    localStorage.setItem(
+      "dienNuocData",
+      JSON.stringify(
+        Object.fromEntries(
+          ids.map(
+            id => [id, $(id).value]
+          )
+        )
+      )
+    );
+
+  }
+
+
+  /*
+   * NÚT XÓA
+   */
+
+  function clearData(){
+
+    ids.forEach(
+      id => $(id).value = ""
+    );
+
+    localStorage.removeItem(
+      "dienNuocData"
+    );
+
     calculate();
+
     $("B2").focus();
+
+  }
+
+
+  /*
+   * TỰ ĐỘNG TÍNH KHI NHẬP
+   */
+
+  ids.forEach(id => {
+
+    $(id).addEventListener(
+      "input",
+      calculate
+    );
+
   });
 
+
+  $("clearBtn").addEventListener(
+    "click",
+    clearData
+  );
+
+
+  /*
+   * KHÔI PHỤC SỐ ĐÃ NHẬP
+   */
+
   try{
-    const saved=JSON.parse(localStorage.getItem("dienNuocData")||"{}");
-    ids.forEach(id => { if(saved[id] !== undefined) $(id).value=saved[id]; });
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem(
+          "dienNuocData"
+        ) || "{}"
+      );
+
+
+    ids.forEach(id => {
+
+      if(
+        saved[id] !== undefined
+      ){
+
+        $(id).value =
+          saved[id];
+
+      }
+
+    });
+
   }catch(e){}
+
+
+  /*
+   * TÍNH LẦN ĐẦU
+   */
+
   calculate();
 
+
+  /*
+   * SERVICE WORKER
+   */
+
   if("serviceWorker" in navigator){
-    window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+
+    window.addEventListener(
+      "load",
+      () => {
+
+        navigator.serviceWorker
+          .register("sw.js")
+          .catch(() => {});
+
+      }
+    );
+
   }
+
 </script>
+
 </body>
 </html>
